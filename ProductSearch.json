@@ -1,0 +1,2490 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "ProductSearch Api",
+        "description": "ProductSearch Api",
+        "termsOfService": "https:\/\/www.digikey.com\/en\/terms-and-conditions",
+        "contact": {
+            "name": "B2BApi Team",
+            "url": "https:\/\/developer.digikey.com\/support",
+            "email": "dl_Agile_Team_B2B_API@digikey.com"
+        },
+        "version": "v4",
+        "x-technical-domain": "Sales"
+    },
+    "basePath": "\/products\/v4",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "\/search\/keyword": {
+            "post": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "KeywordSearch can search for any product in the Digi-Key catalog.",
+                "operationId": "KeywordSearch",
+                "consumes": [
+                    "application\/json"
+                ],
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "includes",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "schema": {
+                            "$ref": "#\/definitions\/KeywordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/KeywordResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/{productNumber}\/productdetails": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Retrieve detailed product information including real time pricing and availability.",
+                "description": "Works best with a Digi-Key product number. Some manufacturer product numbers conflict with unrelated products and\r\nmay not\r\nreturn the correct product.\r\nLocale information is required in the headers for accurate pricing and currencies. Locale defaults to United\r\nStates.",
+                "operationId": "ProductDetails",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "description": "The product to retrieve details for.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includes",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/ProductDetails"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/manufacturers": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Returns all Product Manufacturers. ManufacturersId can be used in KeywordRequestDto.Filters.ManufacturerIds to\r\nrestrict a keyword search to a given Manufacturer",
+                "operationId": "Manufacturers",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/ManufacturersResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/categories": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Returns all Product Categories. Category Id can be used in KeywordRequestDto.Filters.TaxonomyIds to restrict a\r\nkeyword search to a given category",
+                "operationId": "Categories",
+                "produces": [
+                    "application\/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/CategoriesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/categories\/{categoryId}": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Returns Category for given Id. Category Id can be used in KeywordRequestDto.Filters.TaxonomyIds to restrict a\r\nkeyword search to a given category",
+                "operationId": "CategoriesById",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "categoryId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/CategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/{productNumber}\/digireelpricing": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Calculate the DigiReel pricing for the given DigiKeyProductNumber and RequestedQuantity",
+                "operationId": "DigiReelPricing",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "description": "The Digi-Key ProductNumber requested for Digi-Reel price calculation. It must be a\r\nDigi-Key Product number that is for a Digi-Reel pack type.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "requestedQuantity",
+                        "description": "The quantity of the product you are looking to create a Digi-Reel with. Must be greater\r\nthan 0.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/DigiReelPricing"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/{productNumber}\/recommendedproducts": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Returns a list of recommended products for the given Product number.",
+                "operationId": "RecommendedProducts",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "description": "The Product being searched for",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The number of records to be returned",
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 1
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchOptionList",
+                        "description": "A comma delimited list of filters that can be used to limit results. Available filters\r\nare the following: LeadFree, CollapsePackingTypes, ExcludeNonStock, Has3DModel, InStock, ManufacturerPartSearch,\r\nNewProductsOnly, RoHSCompliant.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "excludeMarketPlaceProducts",
+                        "description": "Used to exclude MarkPlace products from search results. Default is false",
+                        "type": "boolean",
+                        "default": false
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/RecommendedProductsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/{productNumber}\/substitutions": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Retrieve Substitutions for a given product",
+                "description": "Works best with a Digi-Key Product number. Some manufacturer product numbers conflict with unrelated products and\r\nmay not\r\nreturn the correct product.\r\nLocale information is required in the headers for accurate pricing and currencies. Locale defaults to United\r\nStates.",
+                "operationId": "Substitutions",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includes",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/ProductSubstitutesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/{productNumber}\/associations": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Retrieve Associations for a given product",
+                "description": "Works best with a Digi-Key Product number. Some manufacturer product numbers conflict with unrelated products and may not\r\nreturn the correct product.\r\nLocale information is required in the headers for accurate pricing and currencies. Locale defaults to United\r\nStates.",
+                "operationId": "Associations",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "description": "The product to retrieve substitutions for.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/ProductAssociationsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/packagetypebyquantity\/{productNumber}": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Provide a product number and quantity to receive product information such as pricing, available quantity, and the\r\nbest\r\npackaging type for the requested quantity of the product.\r\nFor example, given a requested quantity larger than a standard reel, this will return information about the\r\nstandard tape and reel as well as either cut tape or DKR depending on the provided preference.\r\nMade for Cut Tape, Tape and Reel, and Digi-Reel products only. Other packaging types can be searched for, but\r\nresults may vary.\r\nLocale information is required in the headers for accurate pricing and currencies. Locale defaults to United\r\nStates.",
+                "operationId": "PackageTypeByQuantity",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "description": "A product number. Can be either Digi-Key or Manufacturer, but some manufacturer product\r\nnumbers are ambiguous and will not be found. A DKR product number will override a CT packagingPreference.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "requestedQuantity",
+                        "description": "The quantity of the product that you are interested in. This will be used to determined\r\nthe quantity to purchase in standard tape and reel, and also in your product preference for the remainder.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "packagingPreference",
+                        "description": "Can be either \"CT\" for Cut Tape or \"DKR\" for Digi-Reel. This will select what package\r\ntype to use for the remainder of quantity outside of a standard reel.",
+                        "type": "string",
+                        "default": ""
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/PackageTypeByQuantityResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "\/search\/{productNumber}\/media": {
+            "get": {
+                "tags": [
+                    "ProductSearch"
+                ],
+                "summary": "Retrieve all media for a given product",
+                "operationId": "Media",
+                "produces": [
+                    "application\/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productNumber",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Client-Id",
+                        "description": "The Client Id for your App.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Site",
+                        "description": "Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Language",
+                        "description": "Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Locale-Currency",
+                        "description": "Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP.",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "X-DIGIKEY-Customer-Id",
+                        "description": "Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#\/definitions\/MediaResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - The input model is invalid or malformed.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token is expired or Client Id or subscription are invalid.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The requested resource could not be found",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Your rate limit has been exceeded",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "500": {
+                        "description": "An unhandled error occurred.",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable - The service is temporarily unavailable",
+                        "schema": {
+                            "$ref": "#\/definitions\/DKProblemDetails"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "BaseFilterV3": {
+            "description": "Base Filter",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "The Id (product?)",
+                    "type": "integer"
+                },
+                "Value": {
+                    "description": "Value",
+                    "type": "string"
+                },
+                "ProductCount": {
+                    "format": "int64",
+                    "description": "Product Count",
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "BaseProduct": {
+            "description": "Base Product Information",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Manufacturer Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Manufacturer Name",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "BreakPrice": {
+            "description": "BreakPrice of a product. Note that all pricing when keyword searching is cached catalog pricing.",
+            "type": "object",
+            "properties": {
+                "Price": {
+                    "format": "double",
+                    "description": "Price of a single unit of the product at this quantity.",
+                    "type": "number",
+                    "example": 0.65000000000000002
+                },
+                "Quantity": {
+                    "format": "int32",
+                    "description": "Price tiers based on the available quantities of the product.",
+                    "type": "integer",
+                    "example": 10
+                }
+            },
+            "additionalProperties": false
+        },
+        "CategoriesResponse": {
+            "description": "Response model for Categories call.",
+            "type": "object",
+            "properties": {
+                "ProductCount": {
+                    "format": "int32",
+                    "description": "Count of Products",
+                    "type": "integer"
+                },
+                "Categories": {
+                    "description": "List of Categories",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Category"
+                    }
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Category": {
+            "description": "Categories are used to filter results of a given search\r\nExample: When searching for batteries a category filter can be used to limit the search to rechargeable batteries",
+            "type": "object",
+            "properties": {
+                "CategoryId": {
+                    "format": "int32",
+                    "description": "CategoryId",
+                    "type": "integer"
+                },
+                "ParentId": {
+                    "format": "int32",
+                    "description": "The Id of the Parent Category if the given category is a child of another category",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Category Name",
+                    "type": "string"
+                },
+                "ProductCount": {
+                    "format": "int64",
+                    "description": "Number of Products in the Category",
+                    "type": "integer"
+                },
+                "Children": {
+                    "description": "List of Child Categories",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Category"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "CategoryNode": {
+            "description": "Category Information",
+            "type": "object",
+            "properties": {
+                "CategoryId": {
+                    "format": "int32",
+                    "description": "The Category Id",
+                    "type": "integer"
+                },
+                "ParentId": {
+                    "format": "int32",
+                    "description": "If this is a child category, this is the Id of the parent category",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Category name",
+                    "type": "string"
+                },
+                "ProductCount": {
+                    "format": "int64",
+                    "description": "The number of products in the category",
+                    "type": "integer"
+                },
+                "NewProductCount": {
+                    "format": "int64",
+                    "description": "The number of new products in the category",
+                    "type": "integer"
+                },
+                "ImageUrl": {
+                    "description": "The URL of the image of the category",
+                    "type": "string"
+                },
+                "SeoDescription": {
+                    "description": "The SEO description for the category",
+                    "type": "string"
+                },
+                "ChildCategories": {
+                    "description": "A list of all children of the category - Their parent Id will be Category Id",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/CategoryNode"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "CategoryResponse": {
+            "description": "Response model for a single Category call.",
+            "type": "object",
+            "properties": {
+                "Category": {
+                    "$ref": "#\/definitions\/Category"
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Classifications": {
+            "description": "Environmental and Export Classifications",
+            "type": "object",
+            "properties": {
+                "ReachStatus": {
+                    "description": "ReachStatus",
+                    "type": "string"
+                },
+                "RohsStatus": {
+                    "description": "RohsStatus",
+                    "type": "string"
+                },
+                "MoistureSensitivityLevel": {
+                    "description": "Code for Moisture Sensitivity Level of the product",
+                    "type": "string"
+                },
+                "ExportControlClassNumber": {
+                    "description": "Export control class number. See documentation from the U.S. Department of Commerce.",
+                    "type": "string"
+                },
+                "HtsusCode": {
+                    "description": "Harmonized Tariff Schedule of the United States. See documentation from the U.S. International Trade Commission.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "DKProblemDetails": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "status": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "detail": {
+                    "type": "string"
+                },
+                "instance": {
+                    "type": "string"
+                },
+                "correlationId": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "readOnly": true
+                }
+            },
+            "additionalProperties": false
+        },
+        "Description": {
+            "type": "object",
+            "properties": {
+                "ProductDescription": {
+                    "description": "Catalog description of the product.",
+                    "type": "string"
+                },
+                "DetailedDescription": {
+                    "description": "Extended description of the product.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "DigiReelPricing": {
+            "description": "Response for Digi-Reel Pricing Request",
+            "type": "object",
+            "properties": {
+                "ReelingFee": {
+                    "format": "double",
+                    "description": "Fee per reel ordered.",
+                    "type": "number",
+                    "example": 7
+                },
+                "UnitPrice": {
+                    "format": "double",
+                    "description": "Price of a single unit of the product.",
+                    "type": "number",
+                    "example": 0.01704
+                },
+                "ExtendedPrice": {
+                    "format": "double",
+                    "description": "The total price of the requested reels and the reeling fee.",
+                    "type": "number",
+                    "example": 8.5199999999999996
+                },
+                "RequestedQuantity": {
+                    "format": "int32",
+                    "description": "The passed in quantity of the product you are looking to create a Digi-Reel with.",
+                    "type": "integer",
+                    "example": 500
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                }
+            },
+            "additionalProperties": false
+        },
+        "FilterId": {
+            "description": "Filter Id",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "description": "The Id of the Filter",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "FilterOptions": {
+            "type": "object",
+            "properties": {
+                "Manufacturers": {
+                    "description": "The Manufacturers that can be filtered to narrow next search request",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/BaseFilterV3"
+                    }
+                },
+                "Packaging": {
+                    "description": "Packaging that can be filtered to narrow next search request",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/BaseFilterV3"
+                    }
+                },
+                "Status": {
+                    "description": "Status that can be filtered to narrow next search request",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/BaseFilterV3"
+                    }
+                },
+                "Series": {
+                    "description": "Series that can be filtered to narrow next search request",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/BaseFilterV3"
+                    }
+                },
+                "ParametricFilters": {
+                    "description": "ParaetricFilter that can be filtered to narrow next search request",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ParameterFilterOptionsResponse"
+                    }
+                },
+                "TopCategories": {
+                    "description": "the top Categories to filter",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/TopCategory"
+                    }
+                },
+                "MarketPlaceFilters": {
+                    "description": "Marketplace Filter",
+                    "type": "array",
+                    "items": {
+                        "enum": [
+                            "NoFilter",
+                            "ExcludeMarketPlace",
+                            "MarketPlaceOnly"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "FilterOptionsRequest": {
+            "description": "Filtering options for keyword search",
+            "type": "object",
+            "properties": {
+                "ManufacturerFilter": {
+                    "description": "Filter on Manufacturer",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterId"
+                    }
+                },
+                "CategoryFilter": {
+                    "description": "Category",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterId"
+                    }
+                },
+                "StatusFilter": {
+                    "description": "Status",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterId"
+                    }
+                },
+                "PackagingFilter": {
+                    "description": "Packaging",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterId"
+                    }
+                },
+                "MarketPlaceFilter": {
+                    "description": "MarketPlaceFilter",
+                    "enum": [
+                        "NoFilter",
+                        "ExcludeMarketPlace",
+                        "MarketPlaceOnly"
+                    ],
+                    "type": "string"
+                },
+                "SeriesFilter": {
+                    "description": "SeriesFilter",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterId"
+                    }
+                },
+                "MinimumQuantityAvailable": {
+                    "format": "int32",
+                    "description": "The MinimumQuantityAvailable for the result to display",
+                    "type": "integer"
+                },
+                "ParameterFilterRequest": {
+                    "$ref": "#\/definitions\/ParameterFilterRequest"
+                },
+                "SearchOptions": {
+                    "description": "\/SearchOptions",
+                    "type": "array",
+                    "items": {
+                        "enum": [
+                            "ChipOutpost",
+                            "Has3DModel",
+                            "HasCadModel",
+                            "HasDatasheet",
+                            "HasProductPhoto",
+                            "InStock",
+                            "NewProduct",
+                            "NonRohsCompliant",
+                            "NormallyStocking",
+                            "RohsCompliant"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "FilterValue": {
+            "description": "Filter Values",
+            "type": "object",
+            "properties": {
+                "ProductCount": {
+                    "format": "int64",
+                    "description": "Number of products with this filter",
+                    "type": "integer"
+                },
+                "ValueId": {
+                    "description": "Filter Value Id",
+                    "type": "string"
+                },
+                "ValueName": {
+                    "description": "Filter Value Name",
+                    "type": "string"
+                },
+                "RangeFilterType": {
+                    "description": "Filter Range - possible values: Min, Max, Range",
+                    "enum": [
+                        "Min",
+                        "Max",
+                        "Range"
+                    ],
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "IsoSearchLocale": {
+            "type": "object",
+            "properties": {
+                "Site": {
+                    "type": "string"
+                },
+                "Language": {
+                    "type": "string"
+                },
+                "Currency": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "KeywordRequest": {
+            "description": "Criteria for Keyword Requests",
+            "type": "object",
+            "properties": {
+                "Keywords": {
+                    "description": "A String of Keywords, up to 250 characters",
+                    "type": "string"
+                },
+                "Limit": {
+                    "format": "int32",
+                    "description": "Number of products to return between 1 and 50.",
+                    "type": "integer"
+                },
+                "Offset": {
+                    "format": "int32",
+                    "description": "The starting index of the records returned. This is used to paginate beyond RecordCount number of results.",
+                    "type": "integer"
+                },
+                "FilterOptionsRequest": {
+                    "$ref": "#\/definitions\/FilterOptionsRequest"
+                }
+            },
+            "additionalProperties": false
+        },
+        "KeywordResponse": {
+            "type": "object",
+            "properties": {
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Product"
+                    }
+                },
+                "ProductsCount": {
+                    "format": "int32",
+                    "description": "Total number of matching products found.",
+                    "type": "integer",
+                    "example": 6463
+                },
+                "ExactMatches": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Product"
+                    }
+                },
+                "FilterOptions": {
+                    "$ref": "#\/definitions\/FilterOptions"
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                },
+                "AppliedParametricFiltersDto": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Parameter"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "Manufacturer": {
+            "description": "Manufacturer Information",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Manufacturer Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Manufacturer Name",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ManufacturerInfo": {
+            "description": "Manufacturer information",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Manufacturer Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Manufacturer Name",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ManufacturersResponse": {
+            "description": "List of Manufacturers and information about each manufacturer",
+            "type": "object",
+            "properties": {
+                "Manufacturers": {
+                    "description": "List of Manufacturer Information",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ManufacturerInfo"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "MediaLinks": {
+            "description": "Media links for a product.",
+            "type": "object",
+            "properties": {
+                "MediaType": {
+                    "description": "The type of media.",
+                    "type": "string"
+                },
+                "Title": {
+                    "description": "The title of the media.",
+                    "type": "string"
+                },
+                "SmallPhoto": {
+                    "description": "URL to a small photo.",
+                    "type": "string"
+                },
+                "Thumbnail": {
+                    "description": "URL to the thumbnail image of the media.",
+                    "type": "string"
+                },
+                "Url": {
+                    "description": "URL of the media.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "MediaResponse": {
+            "description": "Response model for Media",
+            "type": "object",
+            "properties": {
+                "MediaLinks": {
+                    "description": "List of Media Links",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/MediaLinks"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "PackageType": {
+            "description": "Type of packaging for the product. Not all products are available in all packaging types. Possibilities include but are not limited to: Tape and Reel(TR), Cut Tape(CT), Digi-Reel, Tube, Tray, and Bulk.",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "PackageType Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "PackageType Name",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "PackageTypeByQuantityProduct": {
+            "description": "Aggregator Product Dto",
+            "type": "object",
+            "properties": {
+                "RecommendedQuantity": {
+                    "format": "int32",
+                    "description": "Recommended quantity for product",
+                    "type": "integer"
+                },
+                "DigiKeyProductNumber": {
+                    "description": "The Digi-Key part number.",
+                    "type": "string",
+                    "example": "36-117-ND"
+                },
+                "QuantityAvailable": {
+                    "format": "int32",
+                    "description": "Quantity of the product available for immediate sale.",
+                    "type": "integer"
+                },
+                "ProductDescription": {
+                    "description": "Catalog description of the product.",
+                    "type": "string"
+                },
+                "DetailedDescription": {
+                    "description": "Extended catalog description of the product.",
+                    "type": "string"
+                },
+                "ManufacturerName": {
+                    "description": "Manufacturer of the product.",
+                    "type": "string"
+                },
+                "ManufacturerProductNumber": {
+                    "description": "The manufacturer part number. Note that some manufacturer part numbers may be used by multiple manufacturers for\r\ndifferent parts.",
+                    "type": "string"
+                },
+                "MinimumOrderQuantity": {
+                    "format": "int32",
+                    "description": "The minimum quantity to order from Digi-Key.",
+                    "type": "integer"
+                },
+                "PrimaryDatasheetUrl": {
+                    "description": "The URL to the product's datasheet.",
+                    "type": "string"
+                },
+                "PrimaryPhotoUrl": {
+                    "description": "The URL to the product's image.",
+                    "type": "string"
+                },
+                "ProductStatus": {
+                    "description": "Status of the product. Options include: Active, Obsolete, Discontinued at Digi-Key,\r\nLast Time Buy, Not For New Designs, Preliminary. For obsolete parts the part\r\nwill become a non-stocking item when stock is depleted; minimums will apply.\r\nOrder the quantity available or the quantity available plus a multiple of the\r\nminimum order quantity.\r\n\/\/\/",
+                    "type": "string"
+                },
+                "ManufacturerLeadWeeks": {
+                    "description": "The number of weeks expected to receive stock from manufacturer.",
+                    "type": "string",
+                    "example": "6 weeks"
+                },
+                "ManufacturerWarehouseQuantity": {
+                    "format": "int32",
+                    "description": "Quantity of this product available to order from manufacturer.",
+                    "type": "integer",
+                    "example": 165000
+                },
+                "RohsStatus": {
+                    "description": "RoHS status. Can be RoHS Compliant, RoHS non-compliant, RoHS Compliant By Exemption, Not Applicable, Vendor\r\nundefined, Request Inventory Verification, or ROHS3 Compliant.",
+                    "type": "string",
+                    "example": "RoHS Compliant"
+                },
+                "RoHSCompliant": {
+                    "description": "Boolean value for RoHS compliance.",
+                    "type": "boolean"
+                },
+                "QuantityOnOrder": {
+                    "format": "int32",
+                    "description": "Quantity of this product ordered but not immediately available.",
+                    "type": "integer",
+                    "example": 0
+                },
+                "StandardPricing": {
+                    "description": "Standard pricing for the validated locale.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/BreakPrice"
+                    }
+                },
+                "MyPricing": {
+                    "description": "My pricing for the validated locale.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/BreakPrice"
+                    }
+                },
+                "ProductUrl": {
+                    "description": "Full URL of the Digi-Key catalog page to purchase the product. This is based on your provided Locale values.",
+                    "type": "string",
+                    "example": "https:\/\/www.digikey.com\/product-detail\/en\/keystone-electronics\/117\/36-117-ND\/7385294"
+                },
+                "MarketPlace": {
+                    "description": "Is this product a marketplace product",
+                    "type": "boolean"
+                },
+                "Supplier": {
+                    "description": "Name of product supplier",
+                    "type": "string"
+                },
+                "StockNote": {
+                    "description": "Description of Digi-Key's current stocking status for the product. Possible values include: In Stock, Temporarily\r\nOut of Stock, and Limited Supply - Call.",
+                    "type": "string",
+                    "example": "In Stock"
+                },
+                "PackageTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "PackageTypeByQuantityResponse": {
+            "description": "Response from a PackageTypeByQuantity Search Service request",
+            "type": "object",
+            "properties": {
+                "Products": {
+                    "description": "List of products that matched the PackageTypeByQuantitySearchService request.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/PackageTypeByQuantityProduct"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "Parameter": {
+            "description": "Parameter Information",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Parameter Id",
+                    "type": "integer"
+                },
+                "Text": {
+                    "description": "Parameter Description",
+                    "type": "string"
+                },
+                "Priority": {
+                    "format": "int32",
+                    "description": "Parameter priority",
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ParameterFilterOptionsResponse": {
+            "description": "ParameterFilter Options Response",
+            "type": "object",
+            "properties": {
+                "Category": {
+                    "$ref": "#\/definitions\/BaseFilterV3"
+                },
+                "ParameterType": {
+                    "description": "Parameter Type",
+                    "type": "string"
+                },
+                "ParameterId": {
+                    "format": "int32",
+                    "description": "Parameter Id",
+                    "type": "integer"
+                },
+                "ParameterName": {
+                    "description": "Parameter Name",
+                    "type": "string"
+                },
+                "FilterValues": {
+                    "description": "List of Filter Values for the Parameter",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterValue"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "ParameterFilterRequest": {
+            "description": "Request information for using parameter filters",
+            "type": "object",
+            "properties": {
+                "CategoryFilter": {
+                    "$ref": "#\/definitions\/FilterId"
+                },
+                "ParameterFilters": {
+                    "description": "The list of search parameters",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ParametricCategory"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "ParameterValue": {
+            "description": "Parameters are used to refine search results.\r\nExample: If searching for batteries you can use the battery size parameter filter with a value of AAA.",
+            "type": "object",
+            "properties": {
+                "ParameterId": {
+                    "format": "int32",
+                    "description": "Parameter Id",
+                    "type": "integer"
+                },
+                "ParameterText": {
+                    "description": "Parameter Text",
+                    "type": "string"
+                },
+                "ParameterType": {
+                    "description": "Parameter Data Type",
+                    "enum": [
+                        "String",
+                        "Integer",
+                        "Double",
+                        "UnitOfMeasure",
+                        "CoupledUnitOfMeasure",
+                        "RangeUnitOfMeasure"
+                    ],
+                    "type": "string"
+                },
+                "ValueId": {
+                    "description": "The Id of the Parameter value",
+                    "type": "string"
+                },
+                "ValueText": {
+                    "description": "The text of the Parameter value",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ParametricCategory": {
+            "description": "Parametric Category",
+            "type": "object",
+            "properties": {
+                "ParameterId": {
+                    "format": "int32",
+                    "description": "Parameter Id",
+                    "type": "integer"
+                },
+                "FilterValues": {
+                    "description": "List of FilterIdDtos",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/FilterId"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "PriceBreak": {
+            "description": "Price when a product is purchased by specific quantities",
+            "type": "object",
+            "properties": {
+                "BreakQuantity": {
+                    "format": "int32",
+                    "description": "The quantity at which at which the price takes effect",
+                    "type": "integer"
+                },
+                "UnitPrice": {
+                    "format": "double",
+                    "description": "The reduced unit price for the quantity",
+                    "type": "number"
+                },
+                "TotalPrice": {
+                    "format": "double",
+                    "description": "The total reduced price",
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Product": {
+            "description": "Product info",
+            "type": "object",
+            "properties": {
+                "Description": {
+                    "$ref": "#\/definitions\/Description"
+                },
+                "Manufacturer": {
+                    "$ref": "#\/definitions\/Manufacturer"
+                },
+                "ManufacturerProductNumber": {
+                    "description": "The manufacturer part number. Note that some manufacturer part numbers may be used by multiple manufacturers for different parts.",
+                    "type": "string"
+                },
+                "MinimumOrderQuantity": {
+                    "format": "int32",
+                    "description": "The minimum quantity to order from Digi-Key.",
+                    "type": "integer"
+                },
+                "UnitPrice": {
+                    "format": "double",
+                    "description": "The price for a single unit of this product.",
+                    "type": "number"
+                },
+                "ProductUrl": {
+                    "description": "Full URL of the Digi-Key catalog page to purchase the product. This is based on your provided Locale values.",
+                    "type": "string",
+                    "example": "https:\/\/www.digikey.com\/product-detail\/en\/keystone-electronics\/117\/36-117-ND\/7385294"
+                },
+                "DatasheetUrl": {
+                    "description": "The URL to the product's datasheet.",
+                    "type": "string"
+                },
+                "PhotoUrl": {
+                    "description": "The URL to the product's image.",
+                    "type": "string"
+                },
+                "ProductVariations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ProductVariation"
+                    }
+                },
+                "QuantityAvailable": {
+                    "format": "int64",
+                    "description": "The sum of the quantity for all package types that are found in ProductVariations.",
+                    "type": "integer"
+                },
+                "ProductStatus": {
+                    "$ref": "#\/definitions\/ProductStatusV3"
+                },
+                "BackOrderNotAllowed": {
+                    "description": "True if back order is not allowed for this product",
+                    "type": "boolean"
+                },
+                "Discontinued": {
+                    "description": "This product is no longer sold at Digi-Key and will no longer be stocked.",
+                    "type": "boolean"
+                },
+                "EndOfLife": {
+                    "description": "This product is no longer manufactured and will no longer be stocked once stock is depleted.",
+                    "type": "boolean"
+                },
+                "Ncnr": {
+                    "description": "Is product non-cancellable and non-returnable",
+                    "type": "boolean"
+                },
+                "PrimaryVideoUrl": {
+                    "description": "The URL to the product's video",
+                    "type": "string"
+                },
+                "Parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ParameterValue"
+                    }
+                },
+                "BaseProductNumber": {
+                    "$ref": "#\/definitions\/BaseProduct"
+                },
+                "Category": {
+                    "$ref": "#\/definitions\/CategoryNode"
+                },
+                "DateLastBuyChance": {
+                    "format": "date-time",
+                    "description": "Last date that the product will be available for purchase. Date is in ISO 8601.",
+                    "type": "string"
+                },
+                "ManufacturerLeadWeeks": {
+                    "description": "The number of weeks expected to receive stock from manufacturer.",
+                    "type": "string"
+                },
+                "ManufacturerPublicQuantity": {
+                    "format": "int32",
+                    "description": "Quantity of this product available to order from manufacturer.",
+                    "type": "integer"
+                },
+                "MaxQuantityForDistribution": {
+                    "format": "int64",
+                    "description": "Maximum order quantity for Distribution",
+                    "type": "integer"
+                },
+                "Series": {
+                    "$ref": "#\/definitions\/Series"
+                },
+                "StandardPackage": {
+                    "format": "int32",
+                    "description": "StandardPackage",
+                    "type": "integer"
+                },
+                "ShippingInfo": {
+                    "description": "Additional shipping information - if available",
+                    "type": "string"
+                },
+                "Classifications": {
+                    "$ref": "#\/definitions\/Classifications"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductAssociations": {
+            "description": "Product Associations",
+            "type": "object",
+            "properties": {
+                "Kits": {
+                    "description": "Kits that this product is contained in.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ProductSummary"
+                    }
+                },
+                "MatingProducts": {
+                    "description": "An association of same manufacturer products that mate with each other.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ProductSummary"
+                    }
+                },
+                "AssociatedProducts": {
+                    "description": "Products that are directly correlated to complete the intended function of the product. These products may be either same manufacturer or differ.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ProductSummary"
+                    }
+                },
+                "ForUseWithProducts": {
+                    "description": "Products that are directly correlated to complete the intended function of th product. These products may be either same manufacturer or differ.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ProductSummary"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductAssociationsResponse": {
+            "description": "Response model for ProductAssociations",
+            "type": "object",
+            "properties": {
+                "ProductAssociations": {
+                    "$ref": "#\/definitions\/ProductAssociations"
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductDetails": {
+            "type": "object",
+            "properties": {
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                },
+                "Product": {
+                    "$ref": "#\/definitions\/Product"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductStatusV3": {
+            "description": "Product Status Information\r\nPossible Values:\r\nACTIVE = 0;\r\nOBSOLETE = 1;\r\nDISCONTINUED = 2;\r\nCOMINGSOON = 3;\r\nENDOFLIFE = 4;\r\nNEW = 5;\r\nNOTAVAIL = 6;\r\nNRND = 7;\r\nQUOTE = 8;",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Product Status Id",
+                    "type": "integer"
+                },
+                "Status": {
+                    "description": "Product Status",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductSubstitute": {
+            "description": "Product Substitute",
+            "type": "object",
+            "properties": {
+                "SubstituteType": {
+                    "description": "Substitute type",
+                    "type": "string"
+                },
+                "ProductUrl": {
+                    "description": "Product url",
+                    "type": "string"
+                },
+                "Description": {
+                    "description": "Product Description",
+                    "type": "string"
+                },
+                "Manufacturer": {
+                    "$ref": "#\/definitions\/Manufacturer"
+                },
+                "ManufacturerProductNumber": {
+                    "description": "Manufacturer Product Number",
+                    "type": "string"
+                },
+                "UnitPrice": {
+                    "description": "Unit Price",
+                    "type": "string"
+                },
+                "QuantityAvailable": {
+                    "format": "int32",
+                    "description": "Quantity Available",
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductSubstitutesResponse": {
+            "description": "Response model for ProductSubstitutes",
+            "type": "object",
+            "properties": {
+                "ProductSubstitutesCount": {
+                    "format": "int32",
+                    "description": "Count of ProductSubstitutes",
+                    "type": "integer"
+                },
+                "ProductSubstitutes": {
+                    "description": "List of ProductSubstitutes",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/ProductSubstitute"
+                    }
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductSummary": {
+            "description": "Product Summary used by kits and associations",
+            "type": "object",
+            "properties": {
+                "ProductUrl": {
+                    "description": "Product url",
+                    "type": "string"
+                },
+                "Description": {
+                    "description": "Product Description",
+                    "type": "string"
+                },
+                "Manufacturer": {
+                    "$ref": "#\/definitions\/Manufacturer"
+                },
+                "ManufacturerProductNumber": {
+                    "description": "Manufacturer Product Number",
+                    "type": "string"
+                },
+                "UnitPrice": {
+                    "description": "Unit Price",
+                    "type": "string"
+                },
+                "QuantityAvailable": {
+                    "format": "int32",
+                    "description": "Quantity Available",
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ProductVariation": {
+            "description": "Variations of the requested product",
+            "type": "object",
+            "properties": {
+                "DigiKeyProductNumber": {
+                    "description": "DigiKey Product number of the variation",
+                    "type": "string"
+                },
+                "PackageType": {
+                    "$ref": "#\/definitions\/PackageType"
+                },
+                "StandardPricing": {
+                    "description": "Standard pricing for the validated locale.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/PriceBreak"
+                    }
+                },
+                "MyPricing": {
+                    "description": "Your pricing for the account with which you authenticated. Also dependent on locale information.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/PriceBreak"
+                    }
+                },
+                "MarketPlace": {
+                    "description": "Product is a Marketplace product that ships direct from the supplier. A separate shipping fee may apply",
+                    "type": "boolean"
+                },
+                "TariffActive": {
+                    "description": "Indicates if there is a tariff on the item.",
+                    "type": "boolean"
+                },
+                "Supplier": {
+                    "$ref": "#\/definitions\/Supplier"
+                },
+                "QuantityAvailable": {
+                    "format": "int32",
+                    "description": "The quantity available for the specified variation.",
+                    "type": "integer"
+                },
+                "MaxQuantityForDistribution": {
+                    "format": "int64",
+                    "description": "Maximum order quantity for Distribution",
+                    "type": "integer"
+                },
+                "MinimumOrderQuantity": {
+                    "format": "int32",
+                    "description": "The Minimum Order Quantity",
+                    "type": "integer"
+                },
+                "StandardPackage": {
+                    "format": "int32",
+                    "description": "The number of products in the manufacturer's standard package.",
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Recommendation": {
+            "description": "The collection of recommended products for the given product number.",
+            "type": "object",
+            "properties": {
+                "ProductNumber": {
+                    "description": "The product number that the recommendations are for.",
+                    "type": "string"
+                },
+                "RecommendedProducts": {
+                    "description": "The list of recommended products.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/RecommendedProduct"
+                    }
+                },
+                "SearchLocaleUsed": {
+                    "$ref": "#\/definitions\/IsoSearchLocale"
+                }
+            },
+            "additionalProperties": false
+        },
+        "RecommendedProduct": {
+            "description": "The recommended product based on the submitted DigiKeyProductNumber.",
+            "type": "object",
+            "properties": {
+                "DigiKeyProductNumber": {
+                    "description": "The Digi-Key part number.",
+                    "type": "string"
+                },
+                "ManufacturerProductNumber": {
+                    "description": "The manufacturer part number.",
+                    "type": "string"
+                },
+                "ManufacturerName": {
+                    "description": "The name of the manufacturer.",
+                    "type": "string"
+                },
+                "PrimaryPhoto": {
+                    "description": "The URL to the product’s image.",
+                    "type": "string"
+                },
+                "ProductDescription": {
+                    "description": "Catalog description of the product.",
+                    "type": "string"
+                },
+                "QuantityAvailable": {
+                    "format": "int64",
+                    "description": "Quantity of the product available for immediate sale.",
+                    "type": "integer",
+                    "example": 54
+                },
+                "UnitPrice": {
+                    "format": "double",
+                    "description": "The catalog price for a single unit of this product.",
+                    "type": "number",
+                    "example": 94.950000000000003
+                },
+                "ProductUrl": {
+                    "description": "URL of the Digi-Key catalog page to purchase the product. This is based on your provided header Locale values.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "RecommendedProductsResponse": {
+            "description": "The recommended products returned grouped in collections.",
+            "type": "object",
+            "properties": {
+                "Recommendations": {
+                    "description": "The list of RecommendedProductsCollections - each containing a Product and its recommendations.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Recommendation"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "Series": {
+            "description": "Manufacturers may group similar products into a series. This can be used to filter search results.",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Series Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Series Name",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Supplier": {
+            "description": "Supplier Information",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Supplier Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Supplier Name",
+                    "type": "string"
+                },
+                "Url": {
+                    "description": "URL for the Supplier Data Page",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TopCategory": {
+            "description": "Top Category Information",
+            "type": "object",
+            "properties": {
+                "RootCategory": {
+                    "$ref": "#\/definitions\/TopCategoryNode"
+                },
+                "Category": {
+                    "$ref": "#\/definitions\/TopCategoryNode"
+                },
+                "Score": {
+                    "format": "double",
+                    "description": "Category Score",
+                    "type": "number"
+                },
+                "ImageUrl": {
+                    "description": "URL for the Category image",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TopCategoryNode": {
+            "description": "Top Category Node Information",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "format": "int32",
+                    "description": "Category Id",
+                    "type": "integer"
+                },
+                "Name": {
+                    "description": "Category Name",
+                    "type": "string"
+                },
+                "ProductCount": {
+                    "format": "int64",
+                    "description": "Product count for the Category",
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "securityDefinitions": {
+        "apiKeySecurity": {
+            "type": "apiKey",
+            "name": "X-DIGIKEY-Client-Id",
+            "in": "header",
+            "description": "Client Id for current application"
+        },
+        "oauth2ApplicationSecurity": {
+            "type": "oauth2",
+            "flow": "application",
+            "tokenUrl": "https:\/\/api.digikey.com\/v1\/oauth2\/token"
+        }
+    },
+    "security": [
+        {
+            "apiKeySecurity": [],
+            "oauth2ApplicationSecurity": []
+        }
+    ],
+    "host": "api.digikey.com",
+    "x-host-sandbox": "sandbox-api.digikey.com",
+    "x-host-production": "api.digikey.com",
+    "tags": []
+}
