@@ -34079,7 +34079,7 @@
                                                             'Electronics Inc',
                                                     'url': None},
                                        'tariff_active': True}],
-               'quantity_available': 750593,
+               'quantity_available': 749196,
                'series': {'id': 18619, 'name': 'RMCF'},
                'shipping_info': None,
                'standard_package': None,
