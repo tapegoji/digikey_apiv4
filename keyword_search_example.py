@@ -57,6 +57,10 @@ try:
     pprint(api_response.products_count)    
 except ApiException as e:
     print("Exception when calling ProductSearchApi->associations: %s\n" % e)
+with open('keyword_request_1.py', 'w') as f:
+    f.write(keyword_request.to_str())
+with open('api_response_1.py', 'w') as f:
+    f.write(api_response.to_str())
 
 for category in api_response.filter_options.top_categories:
     if "Chip Resistor" in category.category.name or "Chip Resistor - Surface Mount" in category.category.name:
@@ -81,43 +85,108 @@ try:
     pprint(api_response.products_count)    
 except ApiException as e:
     print("Exception when calling ProductSearchApi->associations: %s\n" % e)
+with open('keyword_request_2.py', 'w') as f:
+    f.write(keyword_request.to_str())
+with open('api_response_2.py', 'w') as f:
+    f.write(api_response.to_str())
 
-# Now check if the api_response.filter_options.parameter_filters is not empty. If it is not empty, then we can use the parameter filters to narrow down the search even further
+
+
+
+### Now that we have the category id, we can narrow down the search by adding category id to the filter options
+resistance_max_desired = 10e3           # resistance in ohms
+resistance_min_desired = 10e3
+package_case_desired = '0603 (1608 Metric)'
+power_desired = '0.1W'
+tolerance_desired = '±0.25%'
+temperature_max_desired = 155  # temperature range max desired in degree celsius
+temperature_min_desired = -55  # temperature range min desired in degree celsius
+minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
+# Build the parameter filter request
+category_filter_id = category_id
+parametric_category_list = []
+parametric_category = swagger_client.ParametricCategory()
 if api_response.filter_options.parametric_filters:
     for filter_option in api_response.filter_options.parametric_filters:
         if "Resistance" in filter_option.parameter_name:
-            resistance_filter_id = filter_option.parameter_id
-            resistance_category_filter_id = filter_option.category.id
-            break
-
-parametric_filter_id = resistance_filter_id
-category_filter_id = resistance_category_filter_id
-
-filter_value = swagger_client.FilterValue()
-filter_value.value_id = "10 KOhms"
-# filter_value.range_filter_type = ""
-# print filter_option into a json file with identation
-# with open('filter_option.py', 'w') as f:
-#     f.write(filter_option.to_str())
-    
-
-# Build the parametric category
-parametric_category = swagger_client.ParametricCategory()
-parametric_category.parameter_id = parametric_filter_id
-parametric_category.filter_values = [{'Id' : '10 kOhms'}] # set the category to resistors
-
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            filter_values_list = []
+            for filter_value in filter_option.filter_values:
+                # the value can be like  mOhms,  Ohms,  MOhms,  kOhms,  GOhms if its in not in the format 10 Ohms, we will calculate the value
+                try:
+                    res_val = float(filter_value.value_name.split(' ')[0])
+                    res_unit = filter_value.value_name.split(' ')[1]
+                    # now lets take a look at the unit
+                    if 'mOhms' in res_unit:
+                        res_val = res_val / 1000
+                    elif 'MOhms' in res_unit:
+                        res_val = res_val * 1000000
+                    elif 'kOhms' in res_unit:
+                        res_val = res_val * 1000
+                    elif 'GOhms' in res_unit:
+                        res_val = res_val * 1000000000
+                    if res_val <= resistance_max_desired  and res_val >= resistance_min_desired:
+                        filter_values_list.append({'Id' : filter_value.value_id})
+                        # pprint(parametric_category_list)
+                    
+                except:
+                    pass 
+            parametric_category.filter_values = filter_values_list
+            parametric_category_list.append(parametric_category)
+        if "Package" in filter_option.parameter_name or "Case" in filter_option.parameter_name:
+            for filter_value in filter_option.filter_values:
+                if package_case_desired == filter_value.value_name:
+                    parametric_category = swagger_client.ParametricCategory()  # Create a new instance of ParametricCategory
+                    parametric_category.parameter_id = filter_option.parameter_id
+                    parametric_category.filter_values = [{'Id' : filter_value.value_id}]
+                    parametric_category_list.append(parametric_category)
+                    # pprint(parametric_category_list)
+        if "Power" in filter_option.parameter_name:
+            for filter_value in filter_option.filter_values:
+                if power_desired in filter_value.value_name:
+                    parametric_category = swagger_client.ParametricCategory()
+                    parametric_category.parameter_id = filter_option.parameter_id
+                    parametric_category.filter_values = [{'Id' : filter_value.value_id}]
+                    parametric_category_list.append(parametric_category)
+                    # pprint(parametric_category_list)
+        if "Tolerance" in filter_option.parameter_name:
+            for filter_value in filter_option.filter_values:
+                if tolerance_desired in filter_value.value_name:
+                    parametric_category = swagger_client.ParametricCategory()
+                    parametric_category.parameter_id = filter_option.parameter_id
+                    parametric_category.filter_values = [{'Id' : filter_value.value_id}]
+                    parametric_category_list.append(parametric_category)
+                    # pprint(parametric_category_list)
+        if "Operating Temperature" in filter_option.parameter_name:
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            filter_values_list = []
+            for filter_value in filter_option.filter_values:
+                # value_name is like -55°C ~ 215°C. we split it and get the max temperature and min temperature in integer
+                try:
+                    min_temp = int(filter_value.value_name.split('~')[0].split('°C')[0])
+                    max_temp = int(filter_value.value_name.split('~')[1].split('°C')[0])   
+                    if temperature_max_desired <= max_temp and temperature_min_desired >= min_temp:  # remove oc from the value name
+                        filter_values_list.append({'Id' : filter_value.value_id})
+                        # pprint(parametric_category_list)
+                except:
+                    pass 
+            parametric_category.filter_values = filter_values_list
+            parametric_category_list.append(parametric_category)
 
 # Build the parameter filter request
 parameter_filter_request = swagger_client.ParameterFilterRequest()
-parameter_filter_request.category_filter = [{'Id': category_filter_id}]
-parameter_filter_request.parameter_filters = parametric_category
+parameter_filter_request.category_filter = {'Id': category_filter_id}  # cagtory id is the same for
+parameter_filter_request.parameter_filters = parametric_category_list
 
 
 # Build the filter options request
 filter_options_request = swagger_client.FilterOptionsRequest()
 filter_options_request.status_filter = [{'Id': 0}]  # set the status filter to active
 filter_options_request.category_filter = [{'Id': category_id}]  # set the category filter to resistors
-# filter_options_request.parameter_filter_request = parameter_filter_request
+filter_options_request.parameter_filter_request = parameter_filter_request
+filter_options_request.minimum_quantity_available = minimum_quantity_available
 # filter_options_request.manufacturer_filter = [{'Id' :19}]
 
 # Build eht e
@@ -125,7 +194,8 @@ keyword_request = swagger_client.KeywordRequest()
 keyword_request.keywords = keyword
 keyword_request.limit = 10
 keyword_request.filter_options_request = filter_options_request
-
+with open('keyword_request_3.py', 'w') as f:
+    f.write(keyword_request.to_str())
 try:
     # Retrieve Associations for a given product
     api_response = api_instance.keyword_search(x_digikey_client_id, x_digikey_locale_site=x_digikey_locale_site, x_digikey_locale_language=x_digikey_locale_language, x_digikey_locale_currency=x_digikey_locale_currency, x_digikey_customer_id=x_digikey_customer_id, body = keyword_request)    
@@ -135,5 +205,13 @@ try:
 except ApiException as e:
     print("Exception when calling ProductSearchApi->associations: %s\n" % e)
 
+with open('api_response_3.py', 'w') as f:
+    f.write(api_response.to_str())
 
 print("done")
+
+
+''''
+with open('body_3.py', 'w') as f:
+    f.write(body.to_str())
+'''
