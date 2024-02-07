@@ -239,13 +239,15 @@ class DigiKeyKeyWordSearch:
 
         if api_response.filter_options.parametric_filters:
             for filter_option in api_response.filter_options.parametric_filters:
+                # for testing lets dump the filter options into a py file to see the structure
+                # print(filter_option.parameter_name)
                 if "Resistance" in filter_option.parameter_name:
                     ret_val = add_resistance_filter(filter_option)
-                elif "Package" in filter_option.parameter_name or "Case" in filter_option.parameter_name:
+                elif "Package / Case" in filter_option.parameter_name:
                     ret_val = add_package_case_filter(filter_option)
                 elif "Supplier Device Package" in filter_option.parameter_name:
                     ret_val = add_supplier_device_package_filter(filter_option)
-                elif "Power" in filter_option.parameter_name:
+                elif "Power (Watts)" in filter_option.parameter_name:
                     ret_val = add_power_filter(filter_option)
                 elif "Tolerance" in filter_option.parameter_name:
                     ret_val = add_tolerance_filter(filter_option)
@@ -254,11 +256,11 @@ class DigiKeyKeyWordSearch:
 
                 if ret_val:
                     if "Warning" in ret_val:
-                        return ret_val
+                        return ret_val, ""
         parameter_filter_request = swagger_client.ParameterFilterRequest()
         parameter_filter_request.category_filter = {'Id': category_filter_id}
         parameter_filter_request.parameter_filters = parametric_category_list
-        return parameter_filter_request
+        return "parameter_filter_request", parameter_filter_request
 
     def capacitor_parameter_filter_request(self, category_id, api_response, capacitance_max, capacitance_min, package_case, supplier_device_package, voltage,  tolerance_max, temperature_max, temperature_min):
         # Build the parameter filter request
@@ -374,11 +376,11 @@ class DigiKeyKeyWordSearch:
 
                 if ret_val:
                     if "Warning" in ret_val:
-                        return ret_val
+                        return ret_val, ""
         parameter_filter_request = swagger_client.ParameterFilterRequest()
         parameter_filter_request.category_filter = {'Id': category_filter_id}
         parameter_filter_request.parameter_filters = parametric_category_list
-        return parameter_filter_request
+        return "parameter_filter_request", parameter_filter_request
     
     def find_resistor_pn(self, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min):
         # lets built a kewrod using resisance, package and supplier device package
@@ -386,10 +388,9 @@ class DigiKeyKeyWordSearch:
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
         category_id = self.general_search(keyword, None, None, categor_name='Chip Resistor - Surface Mount')
         # Build the parameter filter request
-        parameter_filter_request = self.resistor_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
-        if type(parameter_filter_request) == str:
-            if "Warning" in parameter_filter_request:
-                return parameter_filter_request
+        ret_val, parameter_filter_request = self.resistor_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
+        if "Warning" in ret_val:
+            return ret_val
         # do a narrow search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
         digikey_pn = self.general_search(keyword, category_id, parameter_filter_request)
         return digikey_pn
@@ -402,10 +403,9 @@ class DigiKeyKeyWordSearch:
         if not category_id:
             return "can't find the category for the given keyword"
         # Build the parameter filter request
-        parameter_filter_request = self.capacitor_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), capacitance_max, capacitance_min, package_case, supplier_device_package, voltage,  tolerance_max, temperature_max, temperature_min)
-        if type(parameter_filter_request) == str:
-            if "Warning" in parameter_filter_request:
-                return parameter_filter_request
+        ret_val, parameter_filter_request = self.capacitor_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), capacitance_max, capacitance_min, package_case, supplier_device_package, voltage,  tolerance_max, temperature_max, temperature_min)
+        if "Warning" in ret_val:
+            return ret_val
         # do a narrow search to get the top categories. Only look for parts with status active and the ones that contain the keyword
         digikey_pn = self.general_search(keyword, category_id, parameter_filter_request)
         return digikey_pn
@@ -431,8 +431,8 @@ if __name__ == "__main__":
     
     def resisotr_test():
          # make a list from 0.001 to 10e12 in log scale
-        # resistance_exact_list = [0.001, 0.01, 0.1, 1, 10, 100, 1e3, 10e3, 100e3, 1e6, 10e6, 100e6, 1e9, 10e9, 100e9, 1e12]
-        resistance_exact_list = [10e6]
+        resistance_exact_list = [0.001, 0.01, 0.1, 1, 10, 100, 1e3, 10e3, 100e3, 1e6, 10e6, 100e6, 1e9, 10e9, 100e9, 1e12]
+        # resistance_exact_list = [10e6]
         for resistance_exact in resistance_exact_list:
             print('Resistance:', resistance_exact)
             if resistance_exact:  # if the exact value is given but not min and max then make them equal
@@ -444,9 +444,9 @@ if __name__ == "__main__":
             package_case = '0603 (1608 Metric)'         # package or case size in Digikey format
             supplier_device_package = '0603'  # supplier device package in Digikey format
             power_min = 0.1             # power in watts
-            tolerance_max = 0.25 # tolerance in percentage  # Tolerance in ±%. example 0.25 means ±0.25%
-            temperature_max = 155  # temperature range max desired in degree celsius
-            temperature_min = -55  # temperature range min desired in degree celsius
+            tolerance_max = 5 # tolerance in percentage  # Tolerance in ±%. example 0.25 means ±0.25%
+            temperature_max = 125  # temperature range max desired in degree celsius
+            temperature_min = -40  # temperature range min desired in degree celsius
             minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
             normally_stocked = True  # only show parts that are normally stocked
             in_stock = True  # only show parts that are in stock
@@ -490,5 +490,5 @@ if __name__ == "__main__":
             print('Digikey part number:', digikey_pn)
 
 # call the capacitor test
-    # capacitor_test()
-    resisotr_test()
+    capacitor_test()
+    # resisotr_test()
