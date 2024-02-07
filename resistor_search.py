@@ -5,7 +5,8 @@ import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 import requests 
-class ResistorSearch:
+
+class DigiKeyKeyWordSearch:
     def __init__(self, client_id, client_secret, grant_type="client_credentials", normally_stocked=True, in_stock = True, minimum_quantity_available=1):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -38,7 +39,7 @@ class ResistorSearch:
         else:
             raise Exception("Failed to get access token")
 
-    def gen_keyword(self, resistance_max, resistance_min, supplier_device_package):
+    def gen_res_keyword(self, resistance_max, resistance_min, supplier_device_package):
         #lets convert the resistance to mOhms, kOhms, MOhms, GOhms
         if resistance_max == resistance_min:
             resistanc_exact = resistance_max
@@ -109,130 +110,133 @@ class ResistorSearch:
             print("No top categories found, refine your search by selecting a different keyword")
             exit()     
       
-    def build_parameter_filter_request(self, category_id, api_response, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min):
+    def resistor_parameter_filter_request(self, category_id, api_response, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min):
         # Build the parameter filter request
         category_filter_id = category_id
         parametric_category_list = []
-        parametric_category = swagger_client.ParametricCategory()
+
+        def add_resistance_filter(filter_option):
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            filter_values_list = []
+            for filter_value in filter_option.filter_values:
+                try:
+                    res_val = float(filter_value.value_name.split(' ')[0])
+                    res_unit = filter_value.value_name.split(' ')[1]
+                    if 'mOhms' in res_unit:
+                        res_val = res_val / 1000
+                    elif 'MOhms' in res_unit:
+                        res_val = res_val * 1000000
+                    elif 'kOhms' in res_unit:
+                        res_val = res_val * 1000
+                    elif 'GOhms' in res_unit:
+                        res_val = res_val * 1000000000
+                    if res_val <= resistance_max and res_val >= resistance_min:
+                        filter_values_list.append({'Id': filter_value.value_id})
+                except:
+                    pass
+            parametric_category.filter_values = filter_values_list
+            parametric_category_list.append(parametric_category)
+
+        def add_package_case_filter(filter_option):
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            parametric_category.filter_values = [{'Id': filter_value.value_id} for filter_value in filter_option.filter_values if package_case == filter_value.value_name]
+            parametric_category_list.append(parametric_category)
+
+        def add_supplier_device_package_filter(filter_option):
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            parametric_category.filter_values = [{'Id': filter_value.value_id} for filter_value in filter_option.filter_values if supplier_device_package == filter_value.value_name]
+            parametric_category_list.append(parametric_category)
+
+        def add_power_filter(filter_option):
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            filter_values_list = []
+            for filter_value in filter_option.filter_values:
+                try:
+                    res_power = filter_value.value_name.split(' ')[0]
+                    if ',' in res_power:
+                        res_power = res_power.replace(',', '')
+                    if 'W' in res_power:
+                        res_power = res_power.split('W')[0]
+                    if '/' in res_power:
+                        res_power = float(res_power.split('/')[0]) / float(res_power.split('/')[1])
+                    else:
+                        res_power = float(res_power)
+                    if res_power >= power_min:
+                        filter_values_list.append({'Id': filter_value.value_id})
+                except:
+                    pass
+            parametric_category.filter_values = filter_values_list
+            parametric_category_list.append(parametric_category)
+
+        def add_tolerance_filter(filter_option):
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            filter_values_list = []
+            for filter_value in filter_option.filter_values:
+                try:
+                    tol_val = float(filter_value.value_name.split('%')[0].split('±')[1])
+                    if tol_val <= tolerance_max:
+                        filter_values_list.append({'Id': filter_value.value_id})
+                except:
+                    pass
+            parametric_category.filter_values = filter_values_list
+            parametric_category_list.append(parametric_category)
+
+        def add_temperature_filter(filter_option):
+            parametric_category = swagger_client.ParametricCategory()
+            parametric_category.parameter_id = filter_option.parameter_id
+            filter_values_list = []
+            for filter_value in filter_option.filter_values:
+                try:
+                    min_temp = int(filter_value.value_name.split('~')[0].split('°C')[0])
+                    max_temp = int(filter_value.value_name.split('~')[1].split('°C')[0])
+                    if temperature_max <= max_temp and temperature_min >= min_temp:
+                        filter_values_list.append({'Id': filter_value.value_id})
+                except:
+                    pass
+            parametric_category.filter_values = filter_values_list
+            parametric_category_list.append(parametric_category)
+
         if api_response.filter_options.parametric_filters:
             for filter_option in api_response.filter_options.parametric_filters:
                 if "Resistance" in filter_option.parameter_name:
-                    parametric_category = swagger_client.ParametricCategory()
-                    parametric_category.parameter_id = filter_option.parameter_id
-                    filter_values_list = []
-                    for filter_value in filter_option.filter_values:
-                        # the value can be like  mOhms,  Ohms,  MOhms,  kOhms,  GOhms if its in not in the format 10 Ohms, we will calculate the value
-                        try:
-                            res_val = float(filter_value.value_name.split(' ')[0])
-                            res_unit = filter_value.value_name.split(' ')[1]
-                            # now lets take a look at the unit
-                            if 'mOhms' in res_unit:
-                                res_val = res_val / 1000
-                            elif 'MOhms' in res_unit:
-                                res_val = res_val * 1000000
-                            elif 'kOhms' in res_unit:
-                                res_val = res_val * 1000
-                            elif 'GOhms' in res_unit:
-                                res_val = res_val * 1000000000
-                            if res_val <= resistance_max  and res_val >= resistance_min:
-                                filter_values_list.append({'Id' : filter_value.value_id})
-                            
-                        except:
-                            pass 
-                    parametric_category.filter_values = filter_values_list
-                    parametric_category_list.append(parametric_category)
-                
-                if "Package" in filter_option.parameter_name or "Case" in filter_option.parameter_name:
-                    for filter_value in filter_option.filter_values:
-                        if package_case == filter_value.value_name:
-                            parametric_category = swagger_client.ParametricCategory()
-                            parametric_category.parameter_id = filter_option.parameter_id
-                            parametric_category.filter_values = [{'Id' : filter_value.value_id}]
-                            parametric_category_list.append(parametric_category)
-                
-                if "Supplier Device Package" in filter_option.parameter_name:
-                    for filter_value in filter_option.filter_values:
-                        if supplier_device_package == filter_value.value_name:
-                            parametric_category = swagger_client.ParametricCategory()
-                            parametric_category.parameter_id = filter_option.parameter_id
-                            parametric_category.filter_values = [{'Id' : filter_value.value_id}]
-                            parametric_category_list.append(parametric_category)
-                            
-                if "Power" in filter_option.parameter_name:
-                    parametric_category = swagger_client.ParametricCategory()
-                    parametric_category.parameter_id = filter_option.parameter_id
-                    filter_values_list = []
-                    for filter_value in filter_option.filter_values:
-                        try:
-                            # power is in term of 0.1W, 1/10W we want to first split based on the space and comma and then remove W from it. if it is in form of 1/10 then convert it to float
-                            res_power = filter_value.value_name.split(' ')[0]
-                            # if there is  a comma in the value, we will remvoe the comma
-                            if ',' in res_power:
-                                res_power = res_power.replace(',', '')
-                            # if there is W in the value, we will remove it too
-                            if 'W' in res_power:
-                                res_power = res_power.split('W')[0]
-                            if '/' in res_power:
-                                res_power = float(res_power.split('/')[0]) / float(res_power.split('/')[1])
-                            else:
-                                res_power = float(res_power)
-                            if res_power >= power_min :
-                                filter_values_list.append({'Id' : filter_value.value_id})
-                        except:
-                            pass
-                    parametric_category.filter_values = filter_values_list
-                    parametric_category_list.append(parametric_category)
-                
-                if "Tolerance" in filter_option.parameter_name:
-                    parametric_category = swagger_client.ParametricCategory()
-                    parametric_category.parameter_id = filter_option.parameter_id
-                    filter_values_list = []
-                    for filter_value in filter_option.filter_values:
-                        # the value is ±30% so we split it and get the value in float
-                        try:
-                            tol_val = float(filter_value.value_name.split('%')[0].split('±')[1])                
-                            if tol_val <= tolerance_max:
-                                filter_values_list.append({'Id' : filter_value.value_id})
-                        except:
-                            pass
-                    parametric_category.filter_values = filter_values_list
-                    parametric_category_list.append(parametric_category)
-                
-                if "Operating Temperature" in filter_option.parameter_name:
-                    parametric_category = swagger_client.ParametricCategory()
-                    parametric_category.parameter_id = filter_option.parameter_id
-                    filter_values_list = []
-                    for filter_value in filter_option.filter_values:
-                        # value_name is like -55°C ~ 155°C. we split it and get the max temperature and min temperature in integer
-                        try:
-                            min_temp = int(filter_value.value_name.split('~')[0].split('°C')[0])
-                            max_temp = int(filter_value.value_name.split('~')[1].split('°C')[0])   
-                            if temperature_max <= max_temp and temperature_min >= min_temp:  # remove oc from the value name
-                                filter_values_list.append({'Id' : filter_value.value_id})
-                        except:
-                            pass 
-                    parametric_category.filter_values = filter_values_list
-                    parametric_category_list.append(parametric_category)
-        # Build the parameter filter request
+                    add_resistance_filter(filter_option)
+                elif "Package" in filter_option.parameter_name or "Case" in filter_option.parameter_name:
+                    add_package_case_filter(filter_option)
+                elif "Supplier Device Package" in filter_option.parameter_name:
+                    add_supplier_device_package_filter(filter_option)
+                elif "Power" in filter_option.parameter_name:
+                    add_power_filter(filter_option)
+                elif "Tolerance" in filter_option.parameter_name:
+                    add_tolerance_filter(filter_option)
+                elif "Operating Temperature" in filter_option.parameter_name:
+                    add_temperature_filter(filter_option)
+
         parameter_filter_request = swagger_client.ParameterFilterRequest()
-        parameter_filter_request.category_filter = {'Id': category_filter_id}  # cagtory id is the same for
+        parameter_filter_request.category_filter = {'Id': category_filter_id}
         parameter_filter_request.parameter_filters = parametric_category_list
         return parameter_filter_request
 
-    def do_search(self, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min):
+    def get_part_number(self, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min):
         # lets built a kewrod using resisance, package and supplier device package
-        keyword = self.gen_keyword(resistance_max, resistance_min, supplier_device_package)
+        keyword = self.gen_res_keyword(resistance_max, resistance_min, supplier_device_package)
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
         category_id = self.general_search(keyword, None, None)
         # Build the parameter filter request
-        parameter_filter_request = self.build_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
+        parameter_filter_request = self.resistor_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
         digikey_pn = self.general_search(keyword, category_id, parameter_filter_request)
         return digikey_pn
+
+
 #####################################################################################################################
 # if we run this file directly, we will run the following code
 if __name__ == "__main__":
-    resistance_exact = 15
+    resistance_exact = 10e3  # resistance in ohms
     if resistance_exact:  # if the exact value is given but not min and max then make them equal
         resistance_max = resistance_exact
         resistance_min = resistance_exact
@@ -248,8 +252,8 @@ if __name__ == "__main__":
     minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
     normally_stocked = True  # only show parts that are normally stocked
     in_stock = True  # only show parts that are in stock
-    res_search = ResistorSearch(client_id='BHAgR5K3PdjmcP3qNq2icY6io0GtQ9f6', client_secret='mGTTaG8fCuJRJyOG', normally_stocked=normally_stocked, minimum_quantity_available=minimum_quantity_available)
+    kw_search = DigiKeyKeyWordSearch(client_id='BHAgR5K3PdjmcP3qNq2icY6io0GtQ9f6', client_secret='mGTTaG8fCuJRJyOG', normally_stocked=normally_stocked, minimum_quantity_available=minimum_quantity_available)
     # lets built a kewrod using resisance, package and supplier device package
-    digikey_pn = res_search.do_search(resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
+    digikey_pn = kw_search.get_part_number(resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
     print('Digikey part number:', digikey_pn)    
 
