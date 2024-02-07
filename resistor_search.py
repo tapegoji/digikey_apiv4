@@ -83,6 +83,11 @@ class ResistorSearch:
         api_response = self.call_api(keyword_request) # call the api
         print('Total products found:', api_response.products_count)
         # pprint(api_response.products_count)
+        if not api_response.products_count:
+            print('No products found, refine your search by selecting a different keyword')
+            exit()
+        if parameter_filter_request:
+            return api_response.products[0].product_variations[0].digi_key_product_number  # return the digikey part number for the first product
         if category_id:  # if category id is provided, we will return the api response
             return api_response
         # if category id is not provided, we will get the top categories
@@ -213,7 +218,8 @@ class ResistorSearch:
         # Build the parameter filter request
         parameter_filter_request = self.build_parameter_filter_request(category_id, self.general_search(keyword, category_id, None, minimum_quantity_available), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
-        self.general_search(keyword, category_id, parameter_filter_request, minimum_quantity_available)
+        digikey_pn = self.general_search(keyword, category_id, parameter_filter_request, minimum_quantity_available)
+        return digikey_pn
 #####################################################################################################################
 # if we run this file directly, we will run the following code
 if __name__ == "__main__":
@@ -228,6 +234,6 @@ if __name__ == "__main__":
     temperature_min = -55  # temperature range min desired in degree celsius
     minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
     # lets built a kewrod using resisance, package and supplier device package
-    res_search.do_search(resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min, minimum_quantity_available)
-    print('done')    
+    digikey_pn = res_search.do_search(resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min, minimum_quantity_available)
+    print('Digikey part number:', digikey_pn)    
 
