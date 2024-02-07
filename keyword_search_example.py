@@ -37,7 +37,32 @@ x_digikey_locale_language = 'en' # str | Two letter code for language to search 
 x_digikey_locale_currency = 'USD' # str | Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP. (optional)
 x_digikey_customer_id = '0' # str | Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them. (optional)
 
-
+resistance_max = 10.5e3           # resistance in ohms
+resistance_min = 9.5e3
+package_case = '0603 (1608 Metric)'         # package or case size in Digikey format
+supplier_device_package = '0603'  # supplier device package in Digikey format
+power_min = 0.1             # power in watts
+tolerance_max = 0.25 # tolerance in percentage  # Tolerance in ±%. example 0.25 means ±0.25%
+temperature_max = 155  # temperature range max desired in degree celsius
+temperature_min = -55  # temperature range min desired in degree celsius
+minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
+# lets built a kewrod using resisance, package and supplier device package
+#lets convert the resistance to mOhms, kOhms, MOhms, GOhms
+if resistance_max == resistance_min:
+    resistanc_exact = resistance_max
+    if resistanc_exact < 1:
+        res_keyword = str(resistance_max)*1000 + ' mOhms'
+    elif resistanc_exact < 1e3:
+        res_keyword = str(resistance_max) + ' Ohms'
+    elif resistanc_exact < 1e6:
+        res_keyword = str(resistance_max/1000) + ' kOhms'
+    elif resistanc_exact < 1e9:
+        res_keyword = str(resistance_max/1e6) + ' MOhms'
+    else:
+        res_keyword = str(resistance_max/1e9) + ' GOhms'
+    keyword = 'resistor '+ res_keyword + ' ' + supplier_device_package
+else:
+    keyword = 'resistor ' + supplier_device_package
 
 # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
 # Build the filter options request
@@ -45,7 +70,6 @@ filter_options_request = swagger_client.FilterOptionsRequest()
 filter_options_request.status_filter = [{'Id': 0}]  # set the status filter to active
 
 # Build body of the request
-keyword = 'resistor' # str | The product to retrieve substitutions for. This is arbitrary text does not have to be exact
 keyword_request = swagger_client.KeywordRequest()
 keyword_request.keywords = keyword
 keyword_request.limit = 1
@@ -62,10 +86,13 @@ with open('keyword_request_1.py', 'w') as f:
 with open('api_response_1.py', 'w') as f:
     f.write(api_response.to_str())
 
-for category in api_response.filter_options.top_categories:
-    if "Chip Resistor" in category.category.name or "Chip Resistor - Surface Mount" in category.category.name:
-        category_id = category.category.id
-
+if api_response.filter_options.top_categories:
+    for category in api_response.filter_options.top_categories:
+        if "Chip Resistor" in category.category.name or "Chip Resistor - Surface Mount" in category.category.name:
+            category_id = category.category.id
+else:
+    print("No top categories found")
+    exit()  
 # Now that we have the category id, we can narrow down the search by adding category id to the filter options
         
 filter_options_request = swagger_client.FilterOptionsRequest()
@@ -73,7 +100,6 @@ filter_options_request.status_filter = [{'Id': 0}]  # set the status filter to a
 filter_options_request.category_filter = [{'Id': category_id}]  # set the category filter to resistors
 
 # Build body of the request
-keyword = 'resistor' # str | The product to retrieve substitutions for. This is arbitrary text does not have to be exact
 keyword_request = swagger_client.KeywordRequest()
 keyword_request.keywords = keyword
 keyword_request.limit = 1
@@ -94,16 +120,6 @@ with open('api_response_2.py', 'w') as f:
 
 
 ### Now that we have the category id, we can narrow down the search by adding category id to the filter options
-resistance_max = 10e3           # resistance in ohms
-resistance_min = 10e3
-package_case = '0603 (1608 Metric)'         # package or case size in Digikey format
-supplier_device_package = '0603'  # supplier device package in Digikey format
-power_min = 0.1             # power in watts
-tolerance_max = 0.25 # tolerance in percentage  # Tolerance in ±%. example 0.25 means ±0.25%
-temperature_max = 155  # temperature range max desired in degree celsius
-temperature_min = -55  # temperature range min desired in degree celsius
-minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
-
 
 # Build the parameter filter request
 category_filter_id = category_id
