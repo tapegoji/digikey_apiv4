@@ -6,10 +6,13 @@ from swagger_client.rest import ApiException
 from pprint import pprint
 import requests 
 class ResistorSearch:
-    def __init__(self, client_id, client_secret, grant_type="client_credentials"):
+    def __init__(self, client_id, client_secret, grant_type="client_credentials", normally_stocked=True, in_stock = True, minimum_quantity_available=1):
         self.client_id = client_id
         self.client_secret = client_secret
         self.grant_type = grant_type
+        self.normally_stocked = normally_stocked
+        self.in_stock = in_stock
+        self.minimum_quantity_available = minimum_quantity_available
         self.configuration = swagger_client.Configuration()
         self.configuration.api_key['X-DIGIKEY-Client-Id'] = client_id
         self.configuration.api_key['X-DIGIKEY-Client-Secret'] = client_secret
@@ -63,7 +66,7 @@ class ResistorSearch:
             print("Exception when calling ProductSearchApi->associations: %s\n" % e)
             return None
     
-    def general_search(self, keyword, category_id=None, parameter_filter_request=None, minimum_quantity_available=1):
+    def general_search(self, keyword, category_id=None, parameter_filter_request=None):
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
         # Build the filter options request
         filter_options_request = swagger_client.FilterOptionsRequest()
@@ -72,7 +75,13 @@ class ResistorSearch:
             filter_options_request.category_filter = [{'Id': category_id}]
         if parameter_filter_request:
             filter_options_request.parameter_filter_request = parameter_filter_request
-        filter_options_request.minimum_quantity_available = minimum_quantity_available
+        filter_options_request.minimum_quantity_available = self.minimum_quantity_available
+        if self.normally_stocked:
+            filter_options_request.search_options = ["NormallyStocking"]
+        else:
+            filter_options_request.search_options = []
+        if self.in_stock:
+            filter_options_request.search_options.append("InStock")
         # filter_options_request.manufacturer_filter = [{'Id' :19}]
 
         # Build body of the request
@@ -210,22 +219,26 @@ class ResistorSearch:
         parameter_filter_request.parameter_filters = parametric_category_list
         return parameter_filter_request
 
-    def do_search(self, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min, minimum_quantity_available):
+    def do_search(self, resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min):
         # lets built a kewrod using resisance, package and supplier device package
         keyword = self.gen_keyword(resistance_max, resistance_min, supplier_device_package)
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
-        category_id = self.general_search(keyword, None, None, minimum_quantity_available)
+        category_id = self.general_search(keyword, None, None)
         # Build the parameter filter request
-        parameter_filter_request = self.build_parameter_filter_request(category_id, self.general_search(keyword, category_id, None, minimum_quantity_available), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
+        parameter_filter_request = self.build_parameter_filter_request(category_id, self.general_search(keyword, category_id, None), resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
         # do a broad search to get the top categories. Only look for parts with status active and the ones that contain the keyword 
-        digikey_pn = self.general_search(keyword, category_id, parameter_filter_request, minimum_quantity_available)
+        digikey_pn = self.general_search(keyword, category_id, parameter_filter_request)
         return digikey_pn
 #####################################################################################################################
 # if we run this file directly, we will run the following code
 if __name__ == "__main__":
-    res_search = ResistorSearch(client_id='BHAgR5K3PdjmcP3qNq2icY6io0GtQ9f6', client_secret='mGTTaG8fCuJRJyOG')
-    resistance_max = 10           # resistance in ohms
-    resistance_min = 10
+    resistance_exact = 15
+    if resistance_exact:  # if the exact value is given but not min and max then make them equal
+        resistance_max = resistance_exact
+        resistance_min = resistance_exact
+    else:
+        resistance_max = 10           # resistance in ohms
+        resistance_min = 1
     package_case = '0603 (1608 Metric)'         # package or case size in Digikey format
     supplier_device_package = '0603'  # supplier device package in Digikey format
     power_min = 0.1             # power in watts
@@ -233,7 +246,10 @@ if __name__ == "__main__":
     temperature_max = 155  # temperature range max desired in degree celsius
     temperature_min = -55  # temperature range min desired in degree celsius
     minimum_quantity_available = 1  # minimum quantity available to avoid out of stock parts
+    normally_stocked = True  # only show parts that are normally stocked
+    in_stock = True  # only show parts that are in stock
+    res_search = ResistorSearch(client_id='BHAgR5K3PdjmcP3qNq2icY6io0GtQ9f6', client_secret='mGTTaG8fCuJRJyOG', normally_stocked=normally_stocked, minimum_quantity_available=minimum_quantity_available)
     # lets built a kewrod using resisance, package and supplier device package
-    digikey_pn = res_search.do_search(resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min, minimum_quantity_available)
+    digikey_pn = res_search.do_search(resistance_max, resistance_min, package_case, supplier_device_package, power_min, tolerance_max, temperature_max, temperature_min)
     print('Digikey part number:', digikey_pn)    
 
