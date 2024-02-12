@@ -21,8 +21,8 @@ def get_access_token(client_id, client_secret, grant_type="client_credentials"):
         raise Exception("Failed to get access token")
 # Configure API key authorization: apiKeySecurity
 configuration = swagger_client.Configuration()
-configuration.api_key['X-DIGIKEY-Client-Id'] = 'BHAgR5K3PdjmcP3qNq2icY6io0GtQ9f6'
-configuration.api_key['X-DIGIKEY-Client-Secret'] = 'mGTTaG8fCuJRJyOG'
+configuration.api_key['X-DIGIKEY-Client-Id'] = ''
+configuration.api_key['X-DIGIKEY-Client-Secret'] = ''
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
