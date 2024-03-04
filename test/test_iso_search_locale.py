@@ -15,9 +15,9 @@ from __future__ import absolute_import
 
 import unittest
 
-import swagger_client
-from swagger_client.models.iso_search_locale import IsoSearchLocale  # noqa: E501
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.models.iso_search_locale import IsoSearchLocale  # noqa: E501
+from dk_api_client.rest import ApiException
 
 
 class TestIsoSearchLocale(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestIsoSearchLocale(unittest.TestCase):
     def testIsoSearchLocale(self):
         """Test IsoSearchLocale"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = swagger_client.models.iso_search_locale.IsoSearchLocale()  # noqa: E501
+        # model = dk_api_client.models.iso_search_locale.IsoSearchLocale()  # noqa: E501
         pass
 
 

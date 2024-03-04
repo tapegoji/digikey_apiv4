@@ -1,4 +1,4 @@
-# swagger_client.ProductSearchApi
+# dk_api_client.ProductSearchApi
 
 All URIs are relative to *https://api.digikey.com/products/v4*
 
@@ -28,21 +28,21 @@ Works best with a Digi-Key Product number. Some manufacturer product numbers con
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | The product to retrieve substitutions for.
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 x_digikey_locale_site = 'x_digikey_locale_site_example' # str | Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH. (optional)
@@ -93,21 +93,21 @@ Returns all Product Categories. Category Id can be used in KeywordRequestDto.Fil
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 
 try:
     # Returns all Product Categories. Category Id can be used in KeywordRequestDto.Filters.TaxonomyIds to restrict a  keyword search to a given category
@@ -144,21 +144,21 @@ Returns Category for given Id. Category Id can be used in KeywordRequestDto.Filt
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 category_id = 56 # int | 
 
 try:
@@ -199,21 +199,21 @@ Calculate the DigiReel pricing for the given DigiKeyProductNumber and RequestedQ
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | The Digi-Key ProductNumber requested for Digi-Reel price calculation. It must be a  Digi-Key Product number that is for a Digi-Reel pack type.
 requested_quantity = 56 # int | The quantity of the product you are looking to create a Digi-Reel with. Must be greater  than 0.
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
@@ -266,28 +266,28 @@ KeywordSearch can search for any product in the Digi-Key catalog.
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 includes = 'includes_example' # str |  (optional)
 x_digikey_locale_site = 'x_digikey_locale_site_example' # str | Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH. (optional)
 x_digikey_locale_language = 'x_digikey_locale_language_example' # str | Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no. (optional)
 x_digikey_locale_currency = 'x_digikey_locale_currency_example' # str | Three letter code for Currency to return part pricing for. Currency must be supported by the selected site. Acceptable values include: USD, CAD, JPY, GBP, EUR, HKD, SGD, TWD, KRW, AUD, NZD, INR, DKK, NOK, SEK, ILS, CNY, PLN, CHF, CZK, HUF, RON, ZAR, MYR, THB, PHP. (optional)
 x_digikey_customer_id = 'x_digikey_customer_id_example' # str | Your Digi-Key Customer id. If your account has multiple Customer Ids for different regions, this allows you to select one of them. (optional)
-body = swagger_client.KeywordRequest() # KeywordRequest |  (optional)
+body = dk_api_client.KeywordRequest() # KeywordRequest |  (optional)
 
 try:
     # KeywordSearch can search for any product in the Digi-Key catalog.
@@ -333,21 +333,21 @@ Returns all Product Manufacturers. ManufacturersId can be used in KeywordRequest
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 x_digikey_locale_site = 'x_digikey_locale_site_example' # str | Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH. (optional)
 x_digikey_locale_language = 'x_digikey_locale_language_example' # str | Two letter code for language to search on. Langauge must be supported by the selected site. If searching on keyword, this language is used to find matches. Acceptable values include: en, ja, de, fr, ko, zhs, zht, it, es, he, nl, sv, pl, fi, da, no. (optional)
@@ -394,21 +394,21 @@ Retrieve all media for a given product
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | 
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 x_digikey_locale_site = 'x_digikey_locale_site_example' # str | Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH. (optional)
@@ -459,21 +459,21 @@ Provide a product number and quantity to receive product information such as pri
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | A product number. Can be either Digi-Key or Manufacturer, but some manufacturer product  numbers are ambiguous and will not be found. A DKR product number will override a CT packagingPreference.
 requested_quantity = 56 # int | The quantity of the product that you are interested in. This will be used to determined  the quantity to purchase in standard tape and reel, and also in your product preference for the remainder.
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
@@ -530,21 +530,21 @@ Works best with a Digi-Key product number. Some manufacturer product numbers con
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | The product to retrieve details for.
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 includes = 'includes_example' # str |  (optional)
@@ -597,21 +597,21 @@ Returns a list of recommended products for the given Product number.
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | The Product being searched for
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 limit = 1 # int | The number of records to be returned (optional) (default to 1)
@@ -668,21 +668,21 @@ Works best with a Digi-Key Product number. Some manufacturer product numbers con
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | 
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 includes = 'includes_example' # str |  (optional)

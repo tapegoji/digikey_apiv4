@@ -15,9 +15,9 @@ from __future__ import absolute_import
 
 import unittest
 
-import swagger_client
-from swagger_client.models.recommended_product import RecommendedProduct  # noqa: E501
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.models.recommended_product import RecommendedProduct  # noqa: E501
+from dk_api_client.rest import ApiException
 
 
 class TestRecommendedProduct(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestRecommendedProduct(unittest.TestCase):
     def testRecommendedProduct(self):
         """Test RecommendedProduct"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = swagger_client.models.recommended_product.RecommendedProduct()  # noqa: E501
+        # model = dk_api_client.models.recommended_product.RecommendedProduct()  # noqa: E501
         pass
 
 

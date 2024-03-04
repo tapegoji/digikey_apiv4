@@ -15,9 +15,9 @@ from __future__ import absolute_import
 
 import unittest
 
-import swagger_client
-from swagger_client.models.filter_value import FilterValue  # noqa: E501
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.models.filter_value import FilterValue  # noqa: E501
+from dk_api_client.rest import ApiException
 
 
 class TestFilterValue(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestFilterValue(unittest.TestCase):
     def testFilterValue(self):
         """Test FilterValue"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = swagger_client.models.filter_value.FilterValue()  # noqa: E501
+        # model = dk_api_client.models.filter_value.FilterValue()  # noqa: E501
         pass
 
 

@@ -1,8 +1,8 @@
 # testng the swagger file
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 import requests 
 
@@ -20,7 +20,7 @@ def get_access_token(client_id, client_secret, grant_type="client_credentials"):
     else:
         raise Exception("Failed to get access token")
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = ''
 configuration.api_key['X-DIGIKEY-Client-Secret'] = ''
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
@@ -29,7 +29,7 @@ configuration.api_key['X-DIGIKEY-Client-Secret'] = ''
 configuration.access_token = get_access_token(configuration.api_key['X-DIGIKEY-Client-Id'], configuration.api_key['X-DIGIKEY-Client-Secret'])
 
 #    create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'RMCF0603FT10K0DKR-ND' # str | The product to retrieve substitutions for.
 x_digikey_client_id = configuration.api_key['X-DIGIKEY-Client-Id']  # str | The Client Id for your App.
 x_digikey_locale_site = 'US' # str | Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH. (optional)

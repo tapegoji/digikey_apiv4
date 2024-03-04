@@ -15,9 +15,9 @@ from __future__ import absolute_import
 
 import unittest
 
-import swagger_client
-from swagger_client.models.price_break import PriceBreak  # noqa: E501
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.models.price_break import PriceBreak  # noqa: E501
+from dk_api_client.rest import ApiException
 
 
 class TestPriceBreak(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestPriceBreak(unittest.TestCase):
     def testPriceBreak(self):
         """Test PriceBreak"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = swagger_client.models.price_break.PriceBreak()  # noqa: E501
+        # model = dk_api_client.models.price_break.PriceBreak()  # noqa: E501
         pass
 
 

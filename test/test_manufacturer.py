@@ -15,9 +15,9 @@ from __future__ import absolute_import
 
 import unittest
 
-import swagger_client
-from swagger_client.models.manufacturer import Manufacturer  # noqa: E501
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.models.manufacturer import Manufacturer  # noqa: E501
+from dk_api_client.rest import ApiException
 
 
 class TestManufacturer(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestManufacturer(unittest.TestCase):
     def testManufacturer(self):
         """Test Manufacturer"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = swagger_client.models.manufacturer.Manufacturer()  # noqa: E501
+        # model = dk_api_client.models.manufacturer.Manufacturer()  # noqa: E501
         pass
 
 

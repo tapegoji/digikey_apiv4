@@ -24,7 +24,7 @@ pip install git+https://github.com/GIT_USER_ID/GIT_REPO_ID.git
 
 Then import the package:
 ```python
-import swagger_client 
+import dk_api_client 
 ```
 
 ### Setuptools
@@ -38,7 +38,7 @@ python setup.py install --user
 
 Then import the package:
 ```python
-import swagger_client
+import dk_api_client
 ```
 
 ## Getting Started
@@ -48,21 +48,21 @@ Please follow the [installation procedure](#installation--usage) and then run th
 ```python
 from __future__ import print_function
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: apiKeySecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.api_key['X-DIGIKEY-Client-Id'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-DIGIKEY-Client-Id'] = 'Bearer'
 # Configure OAuth2 access token for authorization: oauth2ApplicationSecurity
-configuration = swagger_client.Configuration()
+configuration = dk_api_client.Configuration()
 configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # create an instance of the API class
-api_instance = swagger_client.ProductSearchApi(swagger_client.ApiClient(configuration))
+api_instance = dk_api_client.ProductSearchApi(dk_api_client.ApiClient(configuration))
 product_number = 'product_number_example' # str | The product to retrieve substitutions for.
 x_digikey_client_id = 'x_digikey_client_id_example' # str | The Client Id for your App.
 x_digikey_locale_site = 'x_digikey_locale_site_example' # str | Two letter code for Digi-Key product website to search on. Different countries sites have different part restrictions, supported languages, and currencies. Acceptable values include: US, CA, JP, UK, DE, AT, BE, DK, FI, GR, IE, IT, LU, NL, NO, PT, ES, KR, HK, SG, CN, TW, AU, FR, IN, NZ, SE, MX, CH, IL, PL, SK, SI, LV, LT, EE, CZ, HU, BG, MY, ZA, RO, TH, PH. (optional)

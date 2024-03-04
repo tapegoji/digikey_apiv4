@@ -15,9 +15,9 @@ from __future__ import absolute_import
 
 import unittest
 
-import swagger_client
-from swagger_client.models.category_node import CategoryNode  # noqa: E501
-from swagger_client.rest import ApiException
+import dk_api_client
+from dk_api_client.models.category_node import CategoryNode  # noqa: E501
+from dk_api_client.rest import ApiException
 
 
 class TestCategoryNode(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestCategoryNode(unittest.TestCase):
     def testCategoryNode(self):
         """Test CategoryNode"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = swagger_client.models.category_node.CategoryNode()  # noqa: E501
+        # model = dk_api_client.models.category_node.CategoryNode()  # noqa: E501
         pass
 
 

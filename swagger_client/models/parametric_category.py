@@ -16,7 +16,7 @@ import re  # noqa: F401
 
 import six
 
-from swagger_client.configuration import Configuration
+from dk_api_client.configuration import Configuration
 
 
 class ParametricCategory(object):
